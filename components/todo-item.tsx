@@ -27,7 +27,6 @@ export function TodoCard({ todo, optimisticUpdate }: {
   optimisticUpdate: TodoOptimisticUpdate
 }) {
   const { pending } = useFormStatus()
-  const [checked, setChecked] = useState(todo.is_complete)
 
   return (
     <Card className={cn("w-full", pending && "opacity-55")}>
@@ -35,10 +34,10 @@ export function TodoCard({ todo, optimisticUpdate }: {
         <span className="size-10 flex items-center justify-center">
           <Checkbox
             disabled={pending}
-            checked={Boolean(checked)}
+            checked={Boolean(todo.is_complete)}
             onCheckedChange={async (val) => {
               if (val === "indeterminate") return;
-              setChecked(val)
+              optimisticUpdate({ action: "update", todo: { ...todo, is_complete: val } })
               return await updateTodo({ ...todo, is_complete: val })
             }}
           />
